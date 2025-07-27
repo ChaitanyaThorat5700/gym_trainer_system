@@ -1,28 +1,45 @@
+// server.js
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
 const authRoutes = require('./routes/auth');
+const trainerRoutes = require('./routes/trainer'); // ✅ Trainer routes
+const clientRoutes = require('./routes/client');   // ✅ Client routes (make sure this file exists!)
 const verifyToken = require('./middleware/authMiddleware');
 const checkRole = require('./middleware/roleMiddleware');
 
-const app = express(); // ✅ Express must be initialized before using app.*
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Auth routes
+// ✅ Auth routes
 app.use('/api/auth', authRoutes);
 
-// ✅ Protected route with role check
+// ✅ Trainer routes
+app.use('/api/trainer', trainerRoutes);
+
+// ✅ Client routes
+app.use('/api/client', clientRoutes);
+
+// ✅ Protected trainer-only test route
 app.get('/api/protected', verifyToken, checkRole('trainer'), (req, res) => {
   res.json({
     msg: `✅ Hello ${req.user.id}, you are a ${req.user.role} and accessed a protected trainer route!`
   });
 });
 
-// Connect to MongoDB and start server
+// ✅ Protected client-only test route
+app.get('/api/client/profile', verifyToken, checkRole('client'), (req, res) => {
+  res.json({
+    msg: `✅ Hello ${req.user.id}, you are a ${req.user.role} and accessed your client profile!`
+  });
+});
+
+// ✅ Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected');
