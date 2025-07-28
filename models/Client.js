@@ -1,14 +1,30 @@
+// models/Client.js
+
 const mongoose = require('mongoose');
 
 const clientSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  trainer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  name: { 
+    type: String, 
+    required: true 
+  },
+  email: {  // Optional: if you want each client to have an email
+    type: String,
+    unique: true,
+    sparse: true // allows multiple docs to omit the field
+  },
   age: Number,
   weight: Number,
   height: Number,
   goal: String,
-  trainer: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model('Client', clientSchema);

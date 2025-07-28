@@ -4,6 +4,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const clientProgressRoutes = require('./routes/clientProgress');
+
 
 const authRoutes = require('./routes/auth');
 const trainerRoutes = require('./routes/trainer'); // ✅ Trainer routes
@@ -24,6 +26,10 @@ app.use('/api/trainer', trainerRoutes);
 
 // ✅ Client routes
 app.use('/api/client', clientRoutes);
+
+//✅ Client Progress routes
+app.use('/api/client/progress', clientProgressRoutes);
+
 
 // ✅ Protected trainer-only test route
 app.get('/api/protected', verifyToken, checkRole('trainer'), (req, res) => {

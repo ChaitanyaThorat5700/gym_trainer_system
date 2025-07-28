@@ -1,8 +1,11 @@
+// routes/trainer.js
+
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/authMiddleware');
 const checkRole = require('../middleware/roleMiddleware');
 const Client = require('../models/Client');
+const Progress = require('../models/Progress'); // ✅ Use once at top
 
 // ✅ Create new client (Trainer only)
 router.post('/clients', verifyToken, checkRole('trainer'), async (req, res) => {
@@ -70,4 +73,19 @@ router.delete('/clients/:id', verifyToken, checkRole('trainer'), async (req, res
   }
 });
 
-module.exports = router;
+// ✅ GET all progress logs for a specific client (trainer only)
+router.get('/clients/:clientId/progress', verifyToken, checkRole('trainer'), async (req, res) => {
+  try {
+    const { clientId } = req.params;
+
+    const client = await Client.findOne({ _id: clientId, trainer: req.user.id });
+    if (!client) return res.status(403).json({ msg: 'Forbidden: Not your client' });
+
+    const logs = await Progress.find({ client: clientId }).sort({ date: -1 });
+    res.json(logs);
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+});
+
+module.exports = router; // ✅ Export after ALL routes are added!
