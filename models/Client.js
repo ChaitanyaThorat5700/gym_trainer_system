@@ -1,5 +1,3 @@
-// models/Client.js
-
 const mongoose = require('mongoose');
 
 const clientSchema = new mongoose.Schema({
@@ -12,15 +10,20 @@ const clientSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
-  email: {  // Optional: if you want each client to have an email
+  email: {
     type: String,
     unique: true,
-    sparse: true // allows multiple docs to omit the field
+    sparse: true
   },
   age: Number,
   weight: Number,
   height: Number,
   goal: String,
+
+  // ✅ ADD THESE:
+  mealSchedule: [String],       // e.g. ["09:00", "13:00"]
+  workoutSchedule: [String],    // e.g. ["18:00"]
+
   createdAt: {
     type: Date,
     default: Date.now
