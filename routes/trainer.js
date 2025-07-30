@@ -89,4 +89,3 @@ router.get('/clients/:clientId/progress', verifyToken, checkRole('trainer'), asy
 });
 
 module.exports = router; // ✅ Export after ALL routes are added!
-s

@@ -75,4 +75,3 @@ router.delete('/progress/:id', verifyToken, checkRole('client'), async (req, res
 });
 
 module.exports = router;
-s
