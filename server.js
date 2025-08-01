@@ -4,12 +4,16 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const clientProgressRoutes = require('./routes/clientProgress');
-
 
 const authRoutes = require('./routes/auth');
-const trainerRoutes = require('./routes/trainer'); // ✅ Trainer routes
-const clientRoutes = require('./routes/client');   // ✅ Client routes (make sure this file exists!)
+const trainerRoutes = require('./routes/trainer');
+const clientRoutes = require('./routes/client');
+const clientProgressRoutes = require('./routes/clientProgress');
+
+// ✅ NEW: Import Diet and Workout Plan routes
+const dietPlanRoutes = require('./routes/dietPlan');
+const workoutPlanRoutes = require('./routes/workoutPlan');
+
 const verifyToken = require('./middleware/authMiddleware');
 const checkRole = require('./middleware/roleMiddleware');
 
@@ -27,9 +31,14 @@ app.use('/api/trainer', trainerRoutes);
 // ✅ Client routes
 app.use('/api/client', clientRoutes);
 
-//✅ Client Progress routes
+// ✅ Client Progress routes - FIXED: More specific route first
 app.use('/api/client/progress', clientProgressRoutes);
 
+// ✅ NEW: Diet Plan routes
+app.use('/api/diet', dietPlanRoutes);
+
+// ✅ NEW: Workout Plan routes  
+app.use('/api/workout', workoutPlanRoutes);
 
 // ✅ Protected trainer-only test route
 app.get('/api/protected', verifyToken, checkRole('trainer'), (req, res) => {
